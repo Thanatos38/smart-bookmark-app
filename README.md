@@ -1,36 +1,53 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Smart Bookmark App
 
-## Getting Started
+📍 Live Demo: https://smart-bookmark-app-chi.vercel.app
 
-First, run the development server:
+A full-stack bookmark manager built with **Next.js (App Router)** and **Supabase** featuring:
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+✔ Google OAuth authentication  
+✔ Row-level security (RLS)  
+✔ Real-time updates  
+✔ User-specific bookmark isolation  
+✔ Deployment on Vercel  
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 🧱 Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Next.js** (App Router) – frontend + server routing  
+- **Supabase** – database, authentication, and realtime  
+- **PostgreSQL** (via Supabase)  
+- **Tailwind CSS** – UI styling  
+- **Vercel** – deployment
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🚀 Features
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 🔐 Authentication
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- Login with Google OAuth  
+- Session persistence  
+- Protected routes
 
-## Deploy on Vercel
+### 🏷 Bookmark CRUD
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- Add bookmark with title + URL  
+- List only your own bookmarks  
+- Delete bookmarks
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### 🔄 Realtime
+
+- Sync bookmark list instantly across open tabs  
+  using Supabase Realtime
+
+### 🔒 Security
+
+- Row-Level Security (RLS) ensures each user can:
+  - Only view their own bookmarks  
+  - Only insert and delete their own data
+
+---
+
+## 🧠 Architecture
+
