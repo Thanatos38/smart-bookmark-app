@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { getSupabaseClient } from "./lib/supabaseClient";
+export const dynamic = "force-dynamic";
 
-const supabase = getSupabaseClient();
+import { useEffect, useState } from "react";
+import { supabase } from "./lib/supabaseClient";
 import { useRouter } from "next/navigation";
 
 export default function Home() {
@@ -13,50 +13,41 @@ export default function Home() {
   const [title, setTitle] = useState("");
   const [url, setUrl] = useState("");
   const [bookmarks, setBookmarks] = useState<any[]>([]);
-  const [adding, setAdding] = useState(false);
 
   const fetchBookmarks = async (userId: string) => {
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from("bookmarks")
       .select("*")
       .eq("user_id", userId)
       .order("created_at", { ascending: false });
 
     if (data) setBookmarks(data);
-    console.log("FETCH ERROR:", error);
   };
 
   const addBookmark = async () => {
     if (!title || !url || !user) return;
-  
-    try {
-      const { error } = await supabase.from("bookmarks").insert([
-        {
-          title,
-          url,
-          user_id: user.id,
-        },
-      ]);
-  
-      if (error) {
-        console.error("Insert failed:", error.message);
-        return;
-      }
-  
-      setTitle("");
-      setUrl("");
-      fetchBookmarks(user.id);
-    } catch (err) {
-      console.error("Unexpected error:", err);
+
+    const { error } = await supabase.from("bookmarks").insert([
+      {
+        title,
+        url,
+        user_id: user.id,
+      },
+    ]);
+
+    if (error) {
+      console.error(error.message);
+      return;
     }
+
+    setTitle("");
+    setUrl("");
   };
-  
 
   const deleteBookmark = async (id: string) => {
     if (!user) return;
 
     await supabase.from("bookmarks").delete().eq("id", id);
-    fetchBookmarks(user.id);
   };
 
   useEffect(() => {
@@ -72,8 +63,6 @@ export default function Home() {
 
       setLoading(false);
     };
-
-   
 
     checkSession();
 
@@ -94,22 +83,22 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if(!user) return;
+    if (!user) return;
 
     const channel = supabase
-    .channel("bookmarks-channel")
-    .on(
-      "postgres_changes",
-      {
-        event: "*",
-        schema: "public",
-        table: "bookmarks",
-      },
-      () => {
-        fetchBookmarks(user.id);
-      }
-    )
-    .subscribe();
+      .channel("bookmarks-channel")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "bookmarks",
+        },
+        () => {
+          fetchBookmarks(user.id);
+        }
+      )
+      .subscribe();
 
     return () => {
       supabase.removeChannel(channel);
@@ -133,7 +122,6 @@ export default function Home() {
         Logout
       </button>
 
-      {/* Add Bookmark */}
       <div className="mt-6">
         <input
           type="text"
@@ -159,7 +147,6 @@ export default function Home() {
         </button>
       </div>
 
-      {/* Bookmark List */}
       <div className="mt-6 space-y-2">
         {bookmarks.map((bookmark) => (
           <div
@@ -171,6 +158,7 @@ export default function Home() {
               <a
                 href={bookmark.url}
                 target="_blank"
+                rel="noopener noreferrer"
                 className="text-blue-600 text-sm"
               >
                 {bookmark.url}
